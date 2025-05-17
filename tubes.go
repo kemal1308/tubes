@@ -87,7 +87,9 @@ func main() {
 // menu
 func tampilkanMenu() int {
 	var pilihan int
+	fmt.Println()
 	fmt.Println("--------- MENU ----------")
+	fmt.Println()
 	fmt.Println("1. Tambah Pengeluaran")
 	fmt.Println("2. Lihat Riwayat Pengeluaran")
 	fmt.Println("3. Hitung Total Pengeluaran")
