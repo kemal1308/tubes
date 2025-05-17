@@ -48,6 +48,7 @@ func main() {
 				daftarPengeluaran[jumlahPengeluaran] = Pengeluaran{Kategori: kategori, Jumlah: jumlahPerHari}
 				jumlahPengeluaran++
 				fmt.Println("Pengeluaran berhasil ditambahkan.")
+				fmt.Println()
 			}
 		case 2:
 			tampilkanPengeluaran(daftarPengeluaran, jumlahPengeluaran)
@@ -58,7 +59,7 @@ func main() {
 		case 5:
 			menuCariPengeluaran(daftarPengeluaran, jumlahPengeluaran)
 		case 6:
-			fmt.Println("Terima kasih telah menggunakan aplikasi ini.")
+			fmt.Println("Terima kasih telah menggunakan aplikasi GoBudget")
 			keluar = true
 		default:
 			fmt.Println("Pilihan tidak valid.")
@@ -87,6 +88,7 @@ func tampilkanPengeluaran(daftarPengeluaran dataP, jumlah int) {
 	for i := 0; i < jumlah; i++ {
 		fmt.Printf("- %s: Rp%.2f\n", daftarPengeluaran[i].Kategori, daftarPengeluaran[i].Jumlah)
 	}
+	fmt.Println()
 }
 
 // total pengeluaran
@@ -96,6 +98,7 @@ func hitungTotalPengeluaran(daftarPengeluaran dataP, jumlah int) {
 		totalPengeluaran += daftarPengeluaran[i].Jumlah
 	}
 	fmt.Printf("Total Pengeluaran: Rp%.2f\n", totalPengeluaran)
+	fmt.Println()
 }
 
 // budget tersisa
@@ -106,6 +109,7 @@ func cekBudgetTersisa(totalBudget float64, daftarPengeluaran dataP, jumlah int) 
 	}
 	budgetTersisa := totalBudget - totalPengeluaran
 	fmt.Printf("Budget Tersisa: Rp%.2f\n", budgetTersisa)
+	fmt.Println()
 }
 
 func menuCariPengeluaran (daftarPengeluaran dataP, jumlah int){
@@ -138,10 +142,12 @@ func cariPengeluaranKategori(daftarPengeluaran dataP, jumlah int) {
 	for i := 0; i < jumlah; i++ {
 		if daftarPengeluaran[i].Kategori == kategori {
 			fmt.Printf("Pengeluaran ditemukan: %s, Rp%.2f\n", daftarPengeluaran[i].Kategori, daftarPengeluaran[i].Jumlah)
+			fmt.Println()
 			return
 		}
 	}
 	fmt.Println("Pengeluaran tidak ditemukan.")
+	fmt.Println()
 }
 
 // mencari pengeluaran berdasarkan harga
@@ -161,4 +167,5 @@ func cariPengeluaranHarga(daftarPengeluaran dataP, jumlah int, pilihan int) {
 			fmt.Printf("- %s: Rp%.2f\n", daftarPengeluaran[i].Kategori, daftarPengeluaran[i].Jumlah)
 		}
 	}
+	fmt.Println()
 }
