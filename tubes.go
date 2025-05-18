@@ -116,8 +116,9 @@ func tampilkanMenu() int {
 
 // riwayat pengeluaran
 func tampilkanPengeluaran(daftarPengeluaran dataP, jumlah int) {
+	var i int
 	fmt.Println("\nRiwayat Pengeluaran:")
-	for i := 0; i < jumlah; i++ {
+	for i = 0; i < jumlah; i++ {
 		fmt.Printf("- %s: Rp%.2f (Pembayaran: %s)\n", daftarPengeluaran[i].Kategori, daftarPengeluaran[i].Jumlah, daftarPengeluaran[i].MetodeBayar)
 	}
 	fmt.Println()
@@ -126,7 +127,9 @@ func tampilkanPengeluaran(daftarPengeluaran dataP, jumlah int) {
 // total pengeluaran
 func hitungTotalPengeluaran(daftarPengeluaran dataP, jumlah int) {
 	var totalPengeluaran float64
-	for i := 0; i < jumlah; i++ {
+	var i int
+	
+	for i = 0; i < jumlah; i++ {
 		totalPengeluaran += daftarPengeluaran[i].Jumlah
 	}
 	fmt.Printf("Total Pengeluaran: Rp%.2f\n", totalPengeluaran)
@@ -136,10 +139,13 @@ func hitungTotalPengeluaran(daftarPengeluaran dataP, jumlah int) {
 // budget tersisa
 func cekBudgetTersisa(totalBudget float64, daftarPengeluaran dataP, jumlah int) {
 	var totalPengeluaran float64
-	for i := 0; i < jumlah; i++ {
+	var i int
+	var budgetTersisa float64
+	
+	for i = 0; i < jumlah; i++ {
 		totalPengeluaran += daftarPengeluaran[i].Jumlah
 	}
-	budgetTersisa := totalBudget - totalPengeluaran
+	budgetTersisa = totalBudget - totalPengeluaran
 	fmt.Printf("Budget Tersisa: Rp%.2f\n", budgetTersisa)
 	fmt.Println()
 }
@@ -166,31 +172,63 @@ func menuCariPengeluaran (daftarPengeluaran dataP, jumlah int){
 			fmt.Println("Pilihan tidak ada")
 	}
 }
-// cari pengeluaran berdasarkan kategori
-func cariPengeluaranKategori(daftarPengeluaran dataP, jumlah int) {
-	var kategori string
-	fmt.Print("Masukkan kategori pengeluaran yang dicari: ")
-	fmt.Scan(&kategori)
-	
-	var totalKategori float64
-	fmt.Printf("\nPengeluaran pada kategori: %s\n", kategori)
-	for i := 0; i < jumlah; i++ {
-		if daftarPengeluaran[i].Kategori == kategori {
-			fmt.Printf("- Rp%.2f (Pembayaran: %s)\n", daftarPengeluaran[i].Jumlah, daftarPengeluaran[i].MetodeBayar)
-			totalKategori += daftarPengeluaran[i].Jumlah
-		}
-	}
+// mengurutkan pengeluaran berdasarkan kategori (Selection Sort)
+func urutkanPengeluaranKategori(daftarPengeluaran dataP, jumlah int) {
+	var i, minIdx, j int
+    for i = 0; i < jumlah-1; i++ {
+        minIdx = i
+        for j = i + 1; j < jumlah; j++ {
+            if daftarPengeluaran[j].Kategori < daftarPengeluaran[minIdx].Kategori {
+                minIdx = j
+            }
+        }
+        daftarPengeluaran[i], daftarPengeluaran[minIdx] = daftarPengeluaran[minIdx], daftarPengeluaran[i]
+    }
+}
 
-	if totalKategori > 0 {
-		fmt.Printf("\nTotal Pengeluaran untuk %s sebanyak: Rp%.2f\n\n", kategori, totalKategori)
-	} else {
-		fmt.Println("Tidak ada pengeluaran pada kategori tersebut.")
-	}
+// Fungsi untuk melakukan binary search pada kategori pengeluaran
+func cariPengeluaranKategori(daftarPengeluaran dataP, jumlah int) {
+    var kategori string
+    fmt.Print("Masukkan kategori pengeluaran yang dicari: ")
+    fmt.Scan(&kategori)
+
+    urutkanPengeluaranKategori(daftarPengeluaran, jumlah)
+	
+	var kiri, kanan, tengah int
+	var ditemukan bool
+    kiri = 0
+	kanan = jumlah-1
+    ditemukan = false
+
+    fmt.Printf("\nPengeluaran pada kategori: %s\n", kategori)
+    for kiri <= kanan {
+        tengah = (kiri + kanan) / 2
+        if daftarPengeluaran[tengah].Kategori == kategori {
+            ditemukan = true
+            // Mencari semua pengeluaran dengan kategori yang sama tanpa out of range
+            for i := tengah; i >= 0 && daftarPengeluaran[i].Kategori == kategori; i-- {
+                fmt.Printf("- Rp%.2f (Pembayaran: %s)\n", daftarPengeluaran[i].Jumlah, daftarPengeluaran[i].MetodeBayar)
+            }
+            for i := tengah + 1; i < jumlah && daftarPengeluaran[i].Kategori == kategori; i++ {
+                fmt.Printf("- Rp%.2f (Pembayaran: %s)\n", daftarPengeluaran[i].Jumlah, daftarPengeluaran[i].MetodeBayar)
+            }
+            break
+        } else if daftarPengeluaran[tengah].Kategori < kategori {
+            kiri = tengah + 1
+        } else {
+            kanan = tengah - 1
+        }
+    }
+
+    if !ditemukan {
+        fmt.Println("Tidak ada pengeluaran pada kategori tersebut.")
+    }
 }
 
 // mencari pengeluaran berdasarkan harga
 func cariPengeluaranHarga(daftarPengeluaran dataP, jumlah int, pilihan int) {
 	var batas float64
+	var i int
 	if pilihan == 2 {
 		batas = 100000
 	} else if pilihan == 3 {
@@ -200,7 +238,7 @@ func cariPengeluaranHarga(daftarPengeluaran dataP, jumlah int, pilihan int) {
 	}
 
 	fmt.Printf("\nPengeluaran dengan harga > Rp%.2f:\n", batas)
-	for i := 0; i < jumlah; i++ {
+	for i = 0; i < jumlah; i++ {
 		if daftarPengeluaran[i].Jumlah > batas {
 			fmt.Printf("- %s: Rp%.2f (Pembayaran: %s)\n", daftarPengeluaran[i].Kategori, daftarPengeluaran[i].Jumlah, daftarPengeluaran[i].MetodeBayar)
 		}
@@ -218,8 +256,9 @@ func totalPengeluaranPerMetode(daftarPengeluaran dataP, jumlah int) {
 	fmt.Scan(&pilihan)
 
 	var total float64
-
-	for i := 0; i < jumlah; i++ {
+	var i int
+	
+	for i = 0; i < jumlah; i++ {
 		if (pilihan == 1 && daftarPengeluaran[i].MetodeBayar == "Tunai") ||
 			(pilihan == 2 && daftarPengeluaran[i].MetodeBayar == "Non Tunai") {
 			total += daftarPengeluaran[i].Jumlah
@@ -230,7 +269,10 @@ func totalPengeluaranPerMetode(daftarPengeluaran dataP, jumlah int) {
 		fmt.Printf("Total Pengeluaran Tunai: Rp%.2f\n\n", total)
 	} else if pilihan == 2 {
 		fmt.Printf("Total Pengeluaran Non Tunai: Rp%.2f\n\n", total)
+	}else if pilihan == 3{
+		fmt.Print("Kembali ke menu utama")
 	}else{
 		fmt.Print("Opsi tidak ada")
 	}
 }
+
