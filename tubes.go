@@ -50,8 +50,22 @@ func main() {
 				fmt.Print("Masukkan jumlah pengeluaran : Rp.")
 				fmt.Scan(&jumlahPerHari)
 
-				fmt.Print("Metode pembayaran (tunai / non_tunai): ")
-				fmt.Scan(&metodeBayar)
+				fmt.Println("Metode pembayaran: ")
+				fmt.Println("1. Tunai")
+				fmt.Println("2. Non Tunai")
+				var opsiMetode int
+				fmt.Print("Pilih: ")
+				fmt.Scan(&opsiMetode)
+				
+				if opsiMetode == 1{
+					metodeBayar = "Tunai"
+					fmt.Println("Pengeluaran berhasil ditambahkan.")
+				}else if opsiMetode == 2{
+					metodeBayar = "Non Tunai"
+					fmt.Println("Pengeluaran berhasil ditambahkan.")
+				}else{
+					fmt.Print("Opsi tidak ada")
+				}
 
 				var pengeluaranBaru Pengeluaran
 				pengeluaranBaru.Kategori = kategori
@@ -60,8 +74,6 @@ func main() {
 
 				daftarPengeluaran[jumlahPengeluaran] = pengeluaranBaru
 				jumlahPengeluaran++
-
-				fmt.Println("Pengeluaran berhasil ditambahkan.")
 				fmt.Println()
     }
 
@@ -159,15 +171,21 @@ func cariPengeluaranKategori(daftarPengeluaran dataP, jumlah int) {
 	var kategori string
 	fmt.Print("Masukkan kategori pengeluaran yang dicari: ")
 	fmt.Scan(&kategori)
+	
+	var totalKategori float64
+	fmt.Printf("\nPengeluaran pada kategori: %s\n", kategori)
 	for i := 0; i < jumlah; i++ {
 		if daftarPengeluaran[i].Kategori == kategori {
-			fmt.Printf("Pengeluaran ditemukan: %s, Rp%.2f\n", daftarPengeluaran[i].Kategori, daftarPengeluaran[i].Jumlah)
-			fmt.Println()
-			return
+			fmt.Printf("- Rp%.2f (Pembayaran: %s)\n", daftarPengeluaran[i].Jumlah, daftarPengeluaran[i].MetodeBayar)
+			totalKategori += daftarPengeluaran[i].Jumlah
 		}
 	}
-	fmt.Println("Pengeluaran tidak ditemukan.")
-	fmt.Println()
+
+	if totalKategori > 0 {
+		fmt.Printf("\nTotal Pengeluaran untuk %s sebanyak: Rp%.2f\n\n", kategori, totalKategori)
+	} else {
+		fmt.Println("Tidak ada pengeluaran pada kategori tersebut.")
+	}
 }
 
 // mencari pengeluaran berdasarkan harga
@@ -189,17 +207,30 @@ func cariPengeluaranHarga(daftarPengeluaran dataP, jumlah int, pilihan int) {
 	}
 	fmt.Println()
 }
-// pengeluara tiap metode bayar
+// pengeluaran tiap metode bayar
 func totalPengeluaranPerMetode(daftarPengeluaran dataP, jumlah int) {
-	var totalTunai, totalNonTunai float64
+	var pilihan int
+	fmt.Println("\nPilih metode pembayaran untuk total pengeluaran:")
+	fmt.Println("1. Tunai")
+	fmt.Println("2. Non Tunai")
+	fmt.Println("3. Kembali ke menu utama")
+	fmt.Print("Pilih: ")
+	fmt.Scan(&pilihan)
+
+	var total float64
+
 	for i := 0; i < jumlah; i++ {
-		if daftarPengeluaran[i].MetodeBayar == "tunai" {
-			totalTunai += daftarPengeluaran[i].Jumlah
-		} else if daftarPengeluaran[i].MetodeBayar == "non_tunai" {
-			totalNonTunai += daftarPengeluaran[i].Jumlah
+		if (pilihan == 1 && daftarPengeluaran[i].MetodeBayar == "Tunai") ||
+			(pilihan == 2 && daftarPengeluaran[i].MetodeBayar == "Non Tunai") {
+			total += daftarPengeluaran[i].Jumlah
 		}
 	}
-	fmt.Printf("\nTotal Pengeluaran Tunai    : Rp%.2f\n", totalTunai)
-	fmt.Printf("Total Pengeluaran Non Tunai: Rp%.2f\n\n", totalNonTunai)
-}
 
+	if pilihan == 1 {
+		fmt.Printf("Total Pengeluaran Tunai: Rp%.2f\n\n", total)
+	} else if pilihan == 2 {
+		fmt.Printf("Total Pengeluaran Non Tunai: Rp%.2f\n\n", total)
+	}else{
+		fmt.Print("Opsi tidak ada")
+	}
+}
