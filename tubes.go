@@ -37,36 +37,48 @@ func main() {
 
 		switch pilihan {
 		case 1:
-			if jumlahPengeluaran >= NMAX {
-				fmt.Println("Kapasitas pengeluaran penuh.")
+	if jumlahPengeluaran >= NMAX {
+		fmt.Println("Kapasitas pengeluaran penuh.")
+	} else {
+		var kategori string
+		var jumlahPerHari float64
+		var metodeBayar string
+
+		fmt.Print("Masukkan kategori pengeluaran: ")
+		fmt.Scan(&kategori)
+
+		fmt.Print("Masukkan jumlah pengeluaran : Rp.")
+		fmt.Scan(&jumlahPerHari)
+
+		// Hitung total pengeluaran saat ini
+		var totalPengeluaran float64
+		for i := 0; i < jumlahPengeluaran; i++ {
+			totalPengeluaran += daftarPengeluaran[i].Jumlah
+		}
+
+		sisaBudget := totalBudget - totalPengeluaran
+
+		// Cek apakah jumlah melebihi total budget atau sisa budget
+		if jumlahPerHari > totalBudget || jumlahPerHari > sisaBudget {
+			fmt.Printf("Pengeluaran melebihi budget.")
+		} else {
+			fmt.Println("Metode pembayaran: ")
+			fmt.Println("1. Tunai")
+			fmt.Println("2. Non Tunai")
+			var opsiMetode int
+			fmt.Print("Pilih: ")
+			fmt.Scan(&opsiMetode)
+
+			if opsiMetode == 1 {
+				metodeBayar = "Tunai"
+			} else if opsiMetode == 2 {
+				metodeBayar = "Non Tunai"
 			} else {
-				var kategori string
-				var jumlahPerHari float64
-				var metodeBayar string
+				fmt.Println("Opsi tidak ada")
+				metodeBayar = "Tidak Valid"
+			}
 
-				fmt.Print("Masukkan kategori pengeluaran: ")
-				fmt.Scan(&kategori)
-
-				fmt.Print("Masukkan jumlah pengeluaran : Rp.")
-				fmt.Scan(&jumlahPerHari)
-
-				fmt.Println("Metode pembayaran: ")
-				fmt.Println("1. Tunai")
-				fmt.Println("2. Non Tunai")
-				var opsiMetode int
-				fmt.Print("Pilih: ")
-				fmt.Scan(&opsiMetode)
-				
-				if opsiMetode == 1{
-					metodeBayar = "Tunai"
-					fmt.Println("Pengeluaran berhasil ditambahkan.")
-				}else if opsiMetode == 2{
-					metodeBayar = "Non Tunai"
-					fmt.Println("Pengeluaran berhasil ditambahkan.")
-				}else{
-					fmt.Print("Opsi tidak ada")
-				}
-
+			if metodeBayar != "Tidak Valid" {
 				var pengeluaranBaru Pengeluaran
 				pengeluaranBaru.Kategori = kategori
 				pengeluaranBaru.Jumlah = jumlahPerHari
@@ -74,7 +86,10 @@ func main() {
 
 				daftarPengeluaran[jumlahPengeluaran] = pengeluaranBaru
 				jumlahPengeluaran++
-				fmt.Println()
+				fmt.Println("Pengeluaran berhasil ditambahkan.")
+			}
+		}
+		fmt.Println()
     }
 
 		case 2:
