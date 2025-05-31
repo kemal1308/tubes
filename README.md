@@ -57,3 +57,7 @@ Aplikasi ini adalah aplikasi berbasis terminal tanpa backend server atau fronten
     ```bash
    go run main.go
 
+## Tim Pengembang GoBudget
+**Kelompok 11**
+1. Dimas Tri Mahesa
+2. Kemal Farouq At-Tirmidzi
