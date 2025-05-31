@@ -52,3 +52,8 @@ Aplikasi ini adalah aplikasi berbasis terminal tanpa backend server atau fronten
    ```bash
    git clone https://github.com/username/GoBudget.git
    cd GoBudget
+
+2. jalankan program :
+    ```bash
+   go run main.go
+
